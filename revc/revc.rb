@@ -4,7 +4,7 @@ include Rosalind
 input = read_file ARGV[0]
 puts input
 
-output = transcribe_dna_to_rna(input)
+output = reverse_complement(input)
 
-outs output
+puts output
 write_file output

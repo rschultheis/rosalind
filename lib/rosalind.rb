@@ -7,10 +7,12 @@ module Rosalind
     File.open(output_filename, 'w') { |f| f.write(output_string + "\n") }
   end
 
-  NUCLEOTIDES = ['A', 'C', 'G', 'T']
-  RNA         = ['A', 'C', 'G', 'U']
+  NUCLEOTIDES                 = ['A', 'C', 'G', 'T']
+  NUCLEOTIDE_COMPLEMENT       = ['T', 'G', 'C', 'A']
+  NUCLEOTIDE_TO_COMPLEMENT    = Hash[NUCLEOTIDES.zip(NUCLEOTIDE_COMPLEMENT)]
 
-  NUCLEOTIDE_TO_RNA = Hash[NUCLEOTIDES.zip(RNA)]
+  RNA                         = ['A', 'C', 'G', 'U']
+  NUCLEOTIDE_TO_RNA           = Hash[NUCLEOTIDES.zip(RNA)]
 
   def count_nucleotides dna_string
     counts = NUCLEOTIDES.map {|n| dna_string.count(n) }
@@ -20,6 +22,10 @@ module Rosalind
   def transcribe_dna_to_rna dna_string
     NUCLEOTIDE_TO_RNA.each_pair { |n, r| dna_string.gsub!(n,r) }
     dna_string
+  end
+
+  def reverse_complement dna_string
+    dna_string.reverse.split('').map {|n| NUCLEOTIDE_TO_COMPLEMENT[n] }.join('')
   end
 end
 
