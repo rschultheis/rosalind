@@ -8,5 +8,18 @@ module Rosalind
   end
 
   NUCLEOTIDES = ['A', 'C', 'G', 'T']
+  RNA         = ['A', 'C', 'G', 'U']
+
+  NUCLEOTIDE_TO_RNA = Hash[NUCLEOTIDES.zip(RNA)]
+
+  def count_nucleotides dna_string
+    counts = NUCLEOTIDES.map {|n| dna_string.count(n) }
+    Hash[NUCLEOTIDES.zip(counts)]
+  end
+
+  def transcribe_dna_to_rna dna_string
+    NUCLEOTIDE_TO_RNA.each_pair { |n, r| dna_string.gsub!(n,r) }
+    dna_string
+  end
 end
 

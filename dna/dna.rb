@@ -3,8 +3,6 @@ include Rosalind
 
 input = read_file(ARGV[0])
 
-output = NUCLEOTIDES.map {|n|
-  input.count(n)
-}.join(' ')
+output = count_nucleotides(input).values.join(' ')
 
 write_file(output)
