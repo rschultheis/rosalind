@@ -53,5 +53,21 @@ module Rosalind
     dna_string.each_char {|c| gc +=1 if GC.include?(c) }
     (gc.to_f / dna_string.length) * 100.0
   end
+
+  def hamming_distance dna_string_one, dna_string_two
+    hamming_distance = 0
+    length = [dna_string_one.length, dna_string_two.length].min
+    length.times do |n|
+      hamming_distance += 1 unless dna_string_one[n] == dna_string_two[n]
+    end    
+    hamming_distance
+  end
+
+  def substring_positions dna_string, substring
+    positions = []
+    idx = 0
+    positions << idx += 1 while (idx = dna_string.index(substring, idx))
+    positions
+  end
 end
 
