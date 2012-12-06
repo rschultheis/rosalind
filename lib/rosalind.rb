@@ -69,5 +69,14 @@ module Rosalind
     positions << idx += 1 while (idx = dna_string.index(substring, idx))
     positions
   end
+  
+  def is_adjacent? dna_1, dna_2, overlap_length
+    return false if dna_1 == dna_2
+    if dna_2[0, overlap_length] == dna_1[-overlap_length, overlap_length]
+      return true
+    else
+      return false
+    end
+  end
 end
 
