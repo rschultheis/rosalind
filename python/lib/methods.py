@@ -12,3 +12,14 @@ def test_nucleotide_counts():
 	counts = nucleotide_counts(sample)
 	assert counts == dict(zip(NUCLEOTIDES, [20, 12, 17, 21]))
 
+
+def rna_transcribe(dna):
+	"""replace all T with U """
+	rna = dna.replace('T', 'U')
+	return rna
+
+def test_dna_transcribe():
+	sample = "GATGGAACTTGACTACGTAAATT"
+	expected = "GAUGGAACUUGACUACGUAAAUU"
+	assert rna_transcribe(sample) == expected
+

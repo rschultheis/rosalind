@@ -79,3 +79,5 @@ pickle-email-*.html
 output.txt
 
 __pycache__
+*.pyc
+
