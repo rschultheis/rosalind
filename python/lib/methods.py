@@ -38,3 +38,15 @@ def test_reverse_complement():
 	expected = "ACCGGGTTTT"
 	assert reverse_complement(sample) == expected
 
+
+def gc_content(dna):
+	count = 0
+	for n in dna:
+		if (n == 'G' or n == 'C'):
+			count += 1
+	return (float(count) / len(dna)) * 100
+
+def test_gc_content():
+	dna = 'CCACCCTCGTGGTATGGCTAGGCATTCAGGAACCGGAGAACGCTTCAGACCAGCCCGGACTGGGAACCTGCGGGCAGTAGGTGGAAT'
+	assert abs(gc_content(dna) - 60.92) < 0.01
+

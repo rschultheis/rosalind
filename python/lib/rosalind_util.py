@@ -28,4 +28,45 @@ def write_file(file_contents, filename='output.txt'):
 	print "wrote to: " + filename + "\n" + file_contents
 
 
+def parse_fasta(str):
+	str = str.strip()
+	db = dict()
+
+	cur_id = None
+	for line in str.splitlines():
+		line = line.strip()
+		if len(line) <= 0:
+			next
+		if line[0] == '>':
+			cur_id = line[1:]
+			db[cur_id] = ''
+			continue
+
+		db[cur_id] += line
+
+	return db
+
+def test_parse_fasta():
+	input_str = """
+	>Rosalind_6404
+	CCTGCGGAAGATCGGCACTAGAATAGCCAGAACCGTTTCTCTGAGGCTTCCGGCCTTCCC
+	TCCCACTAATAATTCTGAGG
+	>Rosalind_5959
+	CCATCGGTAGCGCATCCTTAGTCCAATTAAGTCCCTATCCAGGCGCTCCGCCGAAGGTCT
+	ATATCCATTTGTCAGCAGACACGC
+	>Rosalind_0808
+	CCACCCTCGTGGTATGGCTAGGCATTCAGGAACCGGAGAACGCTTCAGACCAGCCCGGAC
+	TGGGAACCTGCGGGCAGTAGGTGGAAT
+	"""
+	
+	expected_db = {
+		'Rosalind_6404': 'CCTGCGGAAGATCGGCACTAGAATAGCCAGAACCGTTTCTCTGAGGCTTCCGGCCTTCCCTCCCACTAATAATTCTGAGG',
+		'Rosalind_5959': 'CCATCGGTAGCGCATCCTTAGTCCAATTAAGTCCCTATCCAGGCGCTCCGCCGAAGGTCTATATCCATTTGTCAGCAGACACGC',
+		'Rosalind_0808': 'CCACCCTCGTGGTATGGCTAGGCATTCAGGAACCGGAGAACGCTTCAGACCAGCCCGGACTGGGAACCTGCGGGCAGTAGGTGGAAT',
+		}
+
+	assert parse_fasta(input_str) == expected_db
+
+def read_fasta_file(filename):
+	return parse_fasta(read_file(filename))
 
