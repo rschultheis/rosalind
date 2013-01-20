@@ -11,7 +11,7 @@ def read_file(filename):
 
 	file_contents = fh.read().strip()
 	fh.close()
-	print "read contents:\n" + file_contents
+	#print "read contents:\n" + file_contents
 	return file_contents
 
 def write_file(file_contents, filename='output.txt'):

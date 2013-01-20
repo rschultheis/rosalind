@@ -80,4 +80,23 @@ def test_hamming_distance():
 
 
 
+def is_adjacent(dna1, dna2, distance=3):
+	if dna1[-distance:] == dna2[:distance]: return True
+	return False
+
+def test_is_adjacent():
+	a = 'AAATAAA'
+	b = 'AAATTTT'
+	c = 'TTTTCCC'
+	d = 'AAATCCC'
+	e = 'GGGTGGG'
+
+	assert is_adjacent(a,b) == True
+	assert is_adjacent(a,d) == True
+	assert is_adjacent(b,c) == True
+	assert is_adjacent(a,c) == False
+	assert is_adjacent(a,e) == False
+	assert is_adjacent(b,a) == False
+
+
 
