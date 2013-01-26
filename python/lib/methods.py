@@ -101,7 +101,6 @@ def test_is_adjacent():
 
 def dom_prob(pop_dict):
 	#probabilities depend on population size, so figure that out
-	print str(pop_dict)
 	pop_size = float(sum(pop_dict.values()))
 	
 	#determine_probabilities of all alleles
@@ -142,4 +141,18 @@ def test_dom_prob():
 	
 	assert abs(dom_prob(pop_dict) - 0.7833) < 0.0001 
 
+
+def rna_to_mrna(rna):
+	from rna_codon_table import RNA_CODON_TABLE
+	codons = [rna[i:i+3] for i in range(0, len(rna), 3)]
+	full_mrna = [RNA_CODON_TABLE[codon] for codon in codons]
+	#find the first 'Stop'
+	stop = full_mrna.index('Stop')
+	mrna = ''.join(full_mrna[0:stop])
+	return mrna
+
+def test_rna_to_mrna():
+	rna = 'AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA'
+	expected_mrna = 'MAMAPRTEINSTRING'
+	assert rna_to_mrna(rna) == expected_mrna
 
