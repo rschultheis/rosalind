@@ -99,4 +99,47 @@ def test_is_adjacent():
 	assert is_adjacent(b,a) == False
 
 
+def dom_prob(pop_dict):
+	#probabilities depend on population size, so figure that out
+	print str(pop_dict)
+	pop_size = float(sum(pop_dict.values()))
+	
+	#determine_probabilities of all alleles
+	outcome_probs = {
+		'DD': ((pop_dict['D'] / pop_size) * ((pop_dict['D'] - 1) / (pop_size - 1))),
+		'DH': ((pop_dict['D'] / pop_size) * ((pop_dict['H']) / (pop_size - 1))),
+		'HD': ((pop_dict['H'] / pop_size) * ((pop_dict['D']) / (pop_size - 1))),
+		'DR': ((pop_dict['D'] / pop_size) * ((pop_dict['R']) / (pop_size - 1))),
+		'RD': ((pop_dict['R'] / pop_size) * ((pop_dict['D']) / (pop_size - 1))),
+
+		'HH': ((pop_dict['H'] / pop_size) * ((pop_dict['H'] - 1) / (pop_size - 1))),
+		'HR': ((pop_dict['H'] / pop_size) * ((pop_dict['R']) / (pop_size - 1))),
+		'RH': ((pop_dict['R'] / pop_size) * ((pop_dict['H']) / (pop_size - 1))),
+
+		'RR': ((pop_dict['R'] / pop_size) * ((pop_dict['R'] - 1) / (pop_size - 1))),
+	}
+	#print str(outcome_probs)
+
+	dom_allele_probs = {
+		'DD': 1.0  * outcome_probs['DD'],
+		'DH': 1.0  * outcome_probs['DH'],
+		'HD': 1.0  * outcome_probs['HD'],
+		'DR': 1.0  * outcome_probs['DR'],
+		'RD': 1.0  * outcome_probs['RD'],
+		'HH': 0.75 * outcome_probs['HH'],
+		'HR': 0.5  * outcome_probs['HR'],
+		'RH': 0.5  * outcome_probs['RH'],
+		'RR': 0.0  * outcome_probs['RR'],
+	}
+
+	return sum(dom_allele_probs.values())
+
+def test_dom_prob():
+	pop_dict = {
+		'D': 2,
+		'H': 2,
+		'R': 2 }
+	
+	assert abs(dom_prob(pop_dict) - 0.7833) < 0.0001 
+
 
