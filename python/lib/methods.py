@@ -106,14 +106,11 @@ def dom_prob(pop_dict):
 	#determine_probabilities of all alleles
 	outcome_probs = {
 		'DD': ((pop_dict['D'] / pop_size) * ((pop_dict['D'] - 1) / (pop_size - 1))),
-		'DH': ((pop_dict['D'] / pop_size) * ((pop_dict['H']) / (pop_size - 1))),
-		'HD': ((pop_dict['H'] / pop_size) * ((pop_dict['D']) / (pop_size - 1))),
-		'DR': ((pop_dict['D'] / pop_size) * ((pop_dict['R']) / (pop_size - 1))),
-		'RD': ((pop_dict['R'] / pop_size) * ((pop_dict['D']) / (pop_size - 1))),
+		'DH': ((pop_dict['D'] / pop_size) * ((pop_dict['H']) / (pop_size - 1))) * 2,
+		'DR': ((pop_dict['D'] / pop_size) * ((pop_dict['R']) / (pop_size - 1))) * 2,
 
 		'HH': ((pop_dict['H'] / pop_size) * ((pop_dict['H'] - 1) / (pop_size - 1))),
-		'HR': ((pop_dict['H'] / pop_size) * ((pop_dict['R']) / (pop_size - 1))),
-		'RH': ((pop_dict['R'] / pop_size) * ((pop_dict['H']) / (pop_size - 1))),
+		'HR': ((pop_dict['H'] / pop_size) * ((pop_dict['R']) / (pop_size - 1))) * 2,
 
 		'RR': ((pop_dict['R'] / pop_size) * ((pop_dict['R'] - 1) / (pop_size - 1))),
 	}
@@ -122,12 +119,9 @@ def dom_prob(pop_dict):
 	dom_allele_probs = {
 		'DD': 1.0  * outcome_probs['DD'],
 		'DH': 1.0  * outcome_probs['DH'],
-		'HD': 1.0  * outcome_probs['HD'],
 		'DR': 1.0  * outcome_probs['DR'],
-		'RD': 1.0  * outcome_probs['RD'],
 		'HH': 0.75 * outcome_probs['HH'],
 		'HR': 0.5  * outcome_probs['HR'],
-		'RH': 0.5  * outcome_probs['RH'],
 		'RR': 0.0  * outcome_probs['RR'],
 	}
 
@@ -155,4 +149,78 @@ def test_rna_to_mrna():
 	rna = 'AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA'
 	expected_mrna = 'MAMAPRTEINSTRING'
 	assert rna_to_mrna(rna) == expected_mrna
+
+
+def profile_matrix(dnas):
+	p_mat = dict(zip(NUCLEOTIDES, [[],[],[],[]]))
+	#if there are no dna strings, or those strings have no length, nothing to do
+	if (len(dnas) <= 0) or (len(dnas[0]) <= 0): return p_mat
+	
+	for i in range(0, len(dnas[0])):
+		#put a 0 on the end of each count
+		for n in p_mat: p_mat[n].append(0)
+
+		ns = [dnas[n][i] for n in range(0, len(dnas))]
+		for n in ns: p_mat[n][i] += 1
+
+	return p_mat
+
+def consensus_string(p_mat):
+	con_str = ''
+	for i in range(0, len(p_mat['A'])):
+		i_dict = dict([ (n, a[i]) for n, a in p_mat.iteritems()])
+		con_str += max(i_dict, key=i_dict.get)
+	return con_str
+
+def test_profile_matrix_and_con_string():
+	dnas = map(str.strip, ("""
+		ATCCAGCT
+		GGGCAACT
+		ATGGATCT
+		AAGCAACC
+		TTGGAACT
+		ATGCCATT
+		ATGGCACT
+	""").strip().split('\n'))
+	ex_profile = {
+		'A': [5, 1, 0, 0, 5, 5, 0, 0],
+		'C': [0, 0, 1, 4, 2, 0, 6, 1],
+		'G': [1, 1, 6, 3, 0, 1, 0, 0],
+		'T': [1, 5, 0, 0, 0, 1, 1, 6],
+	}
+	p_mat = profile_matrix(dnas)
+	assert p_mat == ex_profile
+
+	ex_con_string = 'ATGCAACT'
+	assert consensus_string(p_mat) == ex_con_string
+
+
+def expected_dom_offspring(couple_dict):
+	offspring_per_couple = 2
+	#num_couples = sum(couple_dict.values())
+	#total_offspring = num_couples * offspring_per_couple
+
+	expected_by_couple_type = {
+		'DD': 1.0  * couple_dict['DD'] * offspring_per_couple,
+		'DH': 1.0  * couple_dict['DH'] * offspring_per_couple,
+		'DR': 1.0  * couple_dict['DR'] * offspring_per_couple,
+		'HH': 0.75 * couple_dict['HH'] * offspring_per_couple,
+		'HR': 0.5  * couple_dict['HR'] * offspring_per_couple,
+		'RR': 0.0  * couple_dict['RR'] * offspring_per_couple,
+	}
+
+	return sum(expected_by_couple_type.values())
+
+def test_expected_dom_offspring():
+	couple_dict = {
+		'DD': 1,
+		'DH': 0,
+		'DR': 0,
+		'HH': 1,
+		'HR': 0,
+		'RR': 1,
+	}
+
+	assert abs(expected_dom_offspring(couple_dict) - 3.5) < 0.1
+
 
